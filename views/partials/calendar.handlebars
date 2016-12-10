@@ -1,9 +1,6 @@
-<div class="calendarWidget m1">
-  <p class="h7 caps">calendar</p>
-  {{#each partialsData.calendar.data.events}}
-    <div class="mb3">
-      <p class="h7 mb0">{{start}}</p>
-      <p class="mt0">{{summary}}</p>
-    </div>
-  {{/each}}
+\{{#each events}}
+<div class="mb3">
+    <p class="h7 mb0">\{{start}}</p>
+    <p class="mt0">\{{summary}}</p>
 </div>
+\{{/each}}

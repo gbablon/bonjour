@@ -2,6 +2,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
     <script id="weatherWidgetTemplate" type="text/x-handlebars-template"> {{>weather}} </script>
     <script id="transitWidgetTemplate" type="text/x-handlebars-template"> {{>transit}} </script>
+    <script id="calendarWidgetTemplate" type="text/x-handlebars-template"> {{>calendar}} </script>
 {{/section}}
 
 
@@ -22,64 +23,60 @@
         Reminders go here
     </div>
     <div class="col col-4 border" id="right-column">
-        {{>calendar}}
-    </div>
-    <div class="" id="page-status">
+        <div class="calendarWidget m1">
+            <p class="h7 caps">calendar</p>
+            <div class="loaded"></div>
+            <div class="loading"></div>
+        </div>
     </div>
 </div>
+<div id="page-status"></div>
 
 {{#section 'jquery'}}
 <script>
     $(document).ready(function() {
         $(".loaded").hide();
         var weatherWidgetTemplate = Handlebars.compile($("#weatherWidgetTemplate").html());
-        updateWidget("weather", weatherWidgetTemplate, retrieveWeather);
+        updateWidget("weather", weatherWidgetTemplate);
 
         var transitWidgetTemplate = Handlebars.compile($("#transitWidgetTemplate").html());
-        updateWidget("transit", transitWidgetTemplate, retrieveTransit);
+        updateWidget("transit", transitWidgetTemplate);
+
+        var calendarWidgetTemplate = Handlebars.compile($("#calendarWidgetTemplate").html());
+        updateWidget("calendar", calendarWidgetTemplate);
     });
 
-    function updateWidget(prefix, template, retrieveFunc) {
-        console.log("updating " + prefix);
-        var widgetClass = "." + prefix + "Widget";
+    function updateWidget(widget, template) {
+        console.log("updating " + widget);
+        var widgetClass = "." + widget + "Widget";
         var widgetClassLoaded = widgetClass + " .loaded";
         var widgetClassLoading = widgetClass + " .loading";
         $(widgetClassLoaded).hide();
         $(widgetClassLoading).show();
-        retrieveFunc(function(data) {
+        retrieveData(widget, function(data) {
             $(widgetClassLoaded).html(template(data));
             $(widgetClassLoaded).show();
             $(widgetClassLoading).hide();
-            console.log("finished updating " + prefix);
+            console.log("finished updating " + widget);
         });
     }
 
-    function retrieveWeather(cb) {
+    function retrieveData(widget, cb) {
         $.ajax({
-            url: 'weather',
+            url: widget,
             type: 'GET',
             data: $(this).serialize(), 
             success: function(data) {
                 cb(data.data);
             }, 
             error: function() {
-                $("#page-status").html('error retrieving weather');
+                updateStatus("error retrieving " + widget);
             }
         });
     }
 
-    function retrieveTransit(cb) {
-        $.ajax({
-            url: 'transit',
-            type: 'GET',
-            data: $(this).serialize(), 
-            success: function(data) {
-                cb(data.data);
-            }, 
-            error: function() {
-                $("#page-status").html('error retrieving transit');
-            }
-        });
+    function updateStatus(status) {
+        $("#page-status").show().html(status).fadeOut(2000);
     }
 </script>
 {{/section}}

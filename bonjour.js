@@ -1,5 +1,5 @@
 /*
- * Set up server
+ * Set up server & environment
  */
 
 var express = require('express'), // our server
@@ -9,6 +9,16 @@ var express = require('express'), // our server
 var app = express();
 
 var credentials = require('./credentials.js');
+
+// set up the port to listen on
+app.set('port', process.env.PORT || 3000);
+
+// set up our static resource directory
+app.use(express.static(__dirname + '/public'));
+
+/*
+ * Set up data services
+ */
 
 // weather service
 var weatherData = {
@@ -49,25 +59,34 @@ function retrieveTransitData(cb) {
 }
 
 // calendar service
+var calendarData = {
+  lastRefreshed: 0,
+  lastRefreshedString: 0, 
+  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+  data: {}
+};
+
 var calendarService = require('./lib/calendar')({
   scopes: ['https://www.googleapis.com/auth/calendar.readonly'], 
   token_dir: (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/', 
   token_path: 'calendar-nodejs-quickstart.json'
 });
 
-// set up the port to listen on
-app.set('port', process.env.PORT || 3000);
-
-// set up our static resource directory
-app.use(express.static(__dirname + '/public'));
+function retrieveCalendarData(cb) {
+  if(Date.now() < calendarData.lastRefreshed + calendarData.refreshInterval) {
+    return setImmediate(function() { cb(calendarData); });
+  }
+  calendarData.lastRefreshed = Date.now();
+  calendarService.update(calendarData, cb);
+}
 
 /*
  * Set up templating engine
 */
+
 var handlebars = require('express-handlebars').create({ 
   defaultLayout: 'main', 
   helpers: {
-    // define view helpers (used for 'head' and 'jquery' here)
     section: function(name, options) { 
       if(!this._sections) this._sections = {};
       this._sections[name] = options.fn(this);
@@ -79,38 +98,15 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
 /*
- * Retrieve calendar data
+ * Set up routes
  */
- var calendarData = {
-  lastRefreshed: 0,
-  lastRefreshedString: 0, 
-  refreshInterval: 15 * 60 * 1000, // Cache for 15m
-  data: {}
-};
 
-function retrieveCalendarData(cb) {
-  if(Date.now() < calendarData.lastRefreshed + calendarData.refreshInterval) {
-    return setImmediate(function() { cb(calendarData); });
-  }
-  calendarData.lastRefreshed = Date.now();
-  calendarService.update(calendarData, cb);
-}
-
-// app.use(function(req, res, next) {
-//   retrieveCalendarData(function(data) {
-//     if(!res.locals.partialsData) res.locals.partialsData = {};
-//     res.locals.partialsData.calendar = data;
-//     next();
-//   });
-// });
-
-/*
- * Set up primary route
- */
+// set up primary app route
 app.get('/', function(req, res){ 
   res.render('home');
 });
 
+// set up API routes
 app.get('/weather', function(req, res) {
   retrieveWeatherData(function(data) {
     res.json({ data }); 
@@ -122,6 +118,12 @@ app.get('/transit', function(req, res) {
     res.json({ data }); 
   });
 })
+
+app.get('/calendar', function(req, res) {
+  retrieveCalendarData(function(data) {
+    res.json({ data }); 
+  });
+});
 
 /*
  * Run server
