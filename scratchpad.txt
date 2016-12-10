@@ -1,0 +1,25 @@
+Node.js was installed at
+
+   /usr/local/bin/node
+
+npm was installed at
+
+   /usr/local/bin/npm
+
+Make sure that /usr/local/bin is in your $PATH.
+
+~~~
+
+This tutorial was helpful to understand chaining promises and passing data through the chain: https://gist.github.com/Heshyo/9364276#file-q_example-js
+
+~~~
+
+Icon collections:
+https://thenounproject.com/acondiff/collection/weather/?oq=weather&cidx=68
+
+~~~
+
+Uber: https://github.com/shernshiou/node-uber
+
+https://www.twilio.com/docs/libraries/node
+http://twilio.github.io/twilio-node/

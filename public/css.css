@@ -1,0 +1,37 @@
+body {
+  font-family: 'Quicksand', sans-serif;
+}
+
+p.h1 { 
+  font-size: 3rem; 
+}
+
+p.h7 {
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: SlateGrey;
+}
+p.caps {
+  text-transform: uppercase;
+}
+
+#container {
+  width: 1000px;
+}
+
+#left-column, #center-column, #right-column {
+  min-height: 600px;
+}
+
+.transitWidget {
+  padding-top: 20px;
+}
+
+.icon.sm {
+  width: 30px;
+}
+
+
+.icon.lg {
+  width: 128px;
+}

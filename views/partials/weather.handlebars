@@ -1,0 +1,14 @@
+<div class="weatherWidget m1">
+  <p class="h7 caps mb0">weather</p>
+  <div class="clearfix">
+    <div class="col mr2">
+      <img src="{{partialsData.weather.data.icon}}" class="icon lg">
+    </div>
+    <div class="col">
+      <p class="h1 mt2 mb0">{{partialsData.weather.data.temp}}&deg;C</p>
+      <p class="h4 mt1">{{partialsData.weather.data.weather}}</p>
+    </div>
+  </div>
+  <p class="mb1"><b>Now:</b> {{partialsData.weather.data.forecastToday}}</p>
+  <p class="mt0 h5">Later: {{partialsData.weather.data.forecastTonight}}</p>
+</div>
