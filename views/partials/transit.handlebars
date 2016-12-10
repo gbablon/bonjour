@@ -1,18 +1,15 @@
-<div class="transitWidget m1">
-  <p class="h7 caps">subway (as of {{partialsData.transit.data.time}})</p>
-  <div class="clearfix">
-    <div class="col pr1">
-      <img src="{{partialsData.transit.data.statusIcon}}" class="icon sm">
-      <img src="/img/icon_ftrain.png" class="icon sm">
-    </div>
-    <div class="col">
-      <p class="h2 mt0 pb1 inline">{{partialsData.transit.data.statusString}}</p>
-    </div>
+<div class="clearfix">
+  <div class="col pr1">
+    <img src="\{{statusIcon}}" class="icon sm">
+    <img src="/img/icon_ftrain.png" class="icon sm">
   </div>
-  <a href="#" id="transitDetailsLink">Details</a>
-  <p>Hail an Uber</p>
-  <div class="display-none" id="transitDetailsModal">
+  <div class="col">
+    <p class="h2 mt0 pb1 inline">\{{statusString}}</p>
   </div>
+</div>
+<a href="#" id="transitDetailsLink">Details</a>
+<p>Hail an Uber</p>
+<div class="display-none" id="transitDetailsModal">
 </div>
 
 {{#section 'jquery'}}

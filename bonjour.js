@@ -21,10 +21,32 @@ var weatherService = require('./lib/weather')({
   location: '11231'
 });
 
+function retrieveWeatherData(cb) {
+  if(Date.now() < weatherData.lastRefreshed + weatherData.refreshInterval) {
+    return setImmediate(function() { cb(weatherData); });
+  }
+  weatherData.lastRefreshed = Date.now();
+  weatherService.update(weatherData, cb);
+}
+
 // mta transit service
+var transitData = {
+  lastRefreshed: 0,
+  lastRefreshedString: 0, 
+  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+};
+
 var transitService = require('./lib/transit')({
   subwayLine: 'F'
 });
+
+function retrieveTransitData(cb) {
+  if(Date.now() < transitData.lastRefreshed + transitData.refreshInterval) {
+    return setImmediate(function() { cb(transitData); });
+  }
+  transitData.lastRefreshed = Date.now();
+  transitService.update(transitData, cb);
+}
 
 // calendar service
 var calendarService = require('./lib/calendar')({
@@ -55,53 +77,6 @@ var handlebars = require('express-handlebars').create({
 });
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-
-/*
- * Retrieve weather data
- */
-
-function retrieveWeatherData(cb) {
-  if(Date.now() < weatherData.lastRefreshed + weatherData.refreshInterval) {
-    return setImmediate(function() { cb(weatherData); });
-  }
-  weatherData.lastRefreshed = Date.now();
-  weatherService.update(weatherData, cb);
-}
-
-// middleware to add weather to page context
-app.use(function(req, res, next) {
-  retrieveWeatherData(function(data) {
-    if(!res.locals.partialsData) res.locals.partialsData = {};
-    res.locals.partialsData.weather = data;
-    next();
-  });
-});
-
-/*
- * Retrieve transit data
- */
-var transitData = {
-  lastRefreshed: 0,
-  lastRefreshedString: 0, 
-  refreshInterval: 15 * 60 * 1000, // Cache for 15m
-  data: {}
-};
-
-function retrieveTransitData(cb) {
-  if(Date.now() < transitData.lastRefreshed + transitData.refreshInterval) {
-    return setImmediate(function() { cb(transitData); });
-  }
-  transitData.lastRefreshed = Date.now();
-  transitService.update(transitData, cb);
-}
-
-app.use(function(req, res, next) {
-  retrieveTransitData(function(data) {
-    if(!res.locals.partialsData) res.locals.partialsData = {};
-    res.locals.partialsData.transit = data;
-    next();
-  });
-});
 
 /*
  * Retrieve calendar data
@@ -138,6 +113,12 @@ app.get('/', function(req, res){
 
 app.get('/weather', function(req, res) {
   retrieveWeatherData(function(data) {
+    res.json({ data }); 
+  });
+})
+
+app.get('/transit', function(req, res) {
+  retrieveTransitData(function(data) {
     res.json({ data }); 
   });
 })

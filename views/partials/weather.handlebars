@@ -1,17 +1,11 @@
-<div class="weatherWidget m1">
-    <p class="h7 caps mb0">weather</p>
-    <div class="loaded">
-        <div class="clearfix">
-            <div class="col mr2">
-                <img src="#" class="icon lg">
-            </div>
-            <div class="col">
-                <p class="h1 mt2 mb0"><span id="temp"></span>&deg;C</p>
-                <p class="h4 mt1" id="weather"></p>
-            </div>
-        </div>
-        <p class="mb1"><b>Now:</b> <span id="forecastToday"></span></p>
-        <p class="mt0 h5">Later: <span id="forecastTonight"></span></p>
+<div class="clearfix">
+    <div class="col mr2">
+        <img src="\{{icon}}" class="icon lg">
     </div>
-    <div class="loading"></div>
+    <div class="col">
+        <p class="h1 mt2 mb0">\{{temp}}&deg;C</p>
+        <p class="h4 mt1">\{{weather}}</p>
+    </div>
 </div>
+<p class="mb1"><b>Now:</b> \{{forecastToday}}</p>
+<p class="mt0 h5">Later: \{{forecastTonight}}</p>

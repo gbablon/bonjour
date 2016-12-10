@@ -1,7 +1,22 @@
+{{#section 'head'}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
+    <script id="weatherWidgetTemplate" type="text/x-handlebars-template"> {{>weather}} </script>
+    <script id="transitWidgetTemplate" type="text/x-handlebars-template"> {{>transit}} </script>
+{{/section}}
+
+
 <div class="clearfix" id="container">
     <div class="col col-4 border" id="left-column">
-        {{> weather}}
-        {{> transit}}
+        <div class="weatherWidget m1">
+            <p class="h7 caps mb0">weather</p>
+            <div class="loaded"></div>
+            <div class="loading"></div>
+        </div>
+        <div class="transitWidget m1">
+            <p class="h7 caps mb0">transit</p>
+            <div class="loaded"></div>
+            <div class="loading"></div>
+        </div>
     </div>
     <div class="col col-4 border" id="center-column">
         Reminders go here
@@ -17,25 +32,29 @@
 <script>
     $(document).ready(function() {
         $(".loaded").hide();
-        updateWeather();
+        var weatherWidgetTemplate = Handlebars.compile($("#weatherWidgetTemplate").html());
+        updateWidget("weather", weatherWidgetTemplate, retrieveWeather);
+
+        var transitWidgetTemplate = Handlebars.compile($("#transitWidgetTemplate").html());
+        updateWidget("transit", transitWidgetTemplate, retrieveTransit);
     });
 
-    function updateWeather() {
-        $(".weatherWidget .loaded").hide();
-        $(".weatherWidget .loading").show();
-        retrieveWeather(function(data) {
-            $(".weatherWidget #temp").html(data.temp);
-            $(".weatherWidget #weather").html(data.weather);
-            $(".weatherWidget #forecastToday").html(data.forecastToday);
-            $(".weatherWidget #forecastTonight").html(data.forecastTonight);
-            $(".weatherWidget .icon").attr("src", data.icon);
-            $(".weatherWidget .loaded").show();
-            $(".weatherWidget .loading").hide();
+    function updateWidget(prefix, template, retrieveFunc) {
+        console.log("updating " + prefix);
+        var widgetClass = "." + prefix + "Widget";
+        var widgetClassLoaded = widgetClass + " .loaded";
+        var widgetClassLoading = widgetClass + " .loading";
+        $(widgetClassLoaded).hide();
+        $(widgetClassLoading).show();
+        retrieveFunc(function(data) {
+            $(widgetClassLoaded).html(template(data));
+            $(widgetClassLoaded).show();
+            $(widgetClassLoading).hide();
+            console.log("finished updating " + prefix);
         });
     }
 
     function retrieveWeather(cb) {
-        console.log("retrieving weather");
         $.ajax({
             url: 'weather',
             type: 'GET',
@@ -45,6 +64,20 @@
             }, 
             error: function() {
                 $("#page-status").html('error retrieving weather');
+            }
+        });
+    }
+
+    function retrieveTransit(cb) {
+        $.ajax({
+            url: 'transit',
+            type: 'GET',
+            data: $(this).serialize(), 
+            success: function(data) {
+                cb(data.data);
+            }, 
+            error: function() {
+                $("#page-status").html('error retrieving transit');
             }
         });
     }
