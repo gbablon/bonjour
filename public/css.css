@@ -35,3 +35,11 @@ p.caps {
 .icon.lg {
   width: 128px;
 }
+
+.loading {
+  background-image: url('img/loading.gif');
+  background-repeat: no-repeat;
+  background-position: center; 
+  min-height: 24px;
+  margin-top: 20px;
+}

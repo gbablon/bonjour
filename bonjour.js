@@ -11,6 +11,11 @@ var app = express();
 var credentials = require('./credentials.js');
 
 // weather service
+var weatherData = {
+  lastRefreshed: 0,
+  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+};
+
 var weatherService = require('./lib/weather')({
   apiKey: credentials.WeatherUnderground.ApiKey, 
   location: '11231'
@@ -54,11 +59,6 @@ app.set('view engine', 'handlebars');
 /*
  * Retrieve weather data
  */
-var weatherData = {
-  lastRefreshed: 0,
-  refreshInterval: 15 * 60 * 1000, // Cache for 15m
-  data: {}
-};
 
 function retrieveWeatherData(cb) {
   if(Date.now() < weatherData.lastRefreshed + weatherData.refreshInterval) {
@@ -121,13 +121,13 @@ function retrieveCalendarData(cb) {
   calendarService.update(calendarData, cb);
 }
 
-app.use(function(req, res, next) {
-  retrieveCalendarData(function(data) {
-    if(!res.locals.partialsData) res.locals.partialsData = {};
-    res.locals.partialsData.calendar = data;
-    next();
-  });
-});
+// app.use(function(req, res, next) {
+//   retrieveCalendarData(function(data) {
+//     if(!res.locals.partialsData) res.locals.partialsData = {};
+//     res.locals.partialsData.calendar = data;
+//     next();
+//   });
+// });
 
 /*
  * Set up primary route
@@ -135,6 +135,12 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res){ 
   res.render('home');
 });
+
+app.get('/weather', function(req, res) {
+  retrieveWeatherData(function(data) {
+    res.json({ data }); 
+  });
+})
 
 /*
  * Run server

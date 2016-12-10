@@ -9,4 +9,44 @@
     <div class="col col-4 border" id="right-column">
         {{>calendar}}
     </div>
+    <div class="" id="page-status">
+    </div>
 </div>
+
+{{#section 'jquery'}}
+<script>
+    $(document).ready(function() {
+        $(".loaded").hide();
+        updateWeather();
+    });
+
+    function updateWeather() {
+        $(".weatherWidget .loaded").hide();
+        $(".weatherWidget .loading").show();
+        retrieveWeather(function(data) {
+            $(".weatherWidget #temp").html(data.temp);
+            $(".weatherWidget #weather").html(data.weather);
+            $(".weatherWidget #forecastToday").html(data.forecastToday);
+            $(".weatherWidget #forecastTonight").html(data.forecastTonight);
+            $(".weatherWidget .icon").attr("src", data.icon);
+            $(".weatherWidget .loaded").show();
+            $(".weatherWidget .loading").hide();
+        });
+    }
+
+    function retrieveWeather(cb) {
+        console.log("retrieving weather");
+        $.ajax({
+            url: 'weather',
+            type: 'GET',
+            data: $(this).serialize(), 
+            success: function(data) {
+                cb(data.data);
+            }, 
+            error: function() {
+                $("#page-status").html('error retrieving weather');
+            }
+        });
+    }
+</script>
+{{/section}}
