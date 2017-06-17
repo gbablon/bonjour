@@ -3,11 +3,12 @@
     <script id="weatherWidgetTemplate" type="text/x-handlebars-template"> {{>weather}} </script>
     <script id="transitWidgetTemplate" type="text/x-handlebars-template"> {{>transit}} </script>
     <script id="calendarWidgetTemplate" type="text/x-handlebars-template"> {{>calendar}} </script>
+    <script id="remindersWidgetTemplate" type="text/x-handlebars-template"> {{>reminders}} </script>
 {{/section}}
 
 
 <div class="clearfix" id="container">
-    <div class="col col-4 border" id="left-column">
+    <div class="col col-4" id="left-column">
         <div class="weatherWidget m1">
             <p class="h7 caps mb0">weather</p>
             <div class="loaded"></div>
@@ -19,10 +20,14 @@
             <div class="loading"></div>
         </div>
     </div>
-    <div class="col col-4 border" id="center-column">
-        Reminders go here
+    <div class="col col-4 custom-scrollbar" id="center-column">
+        <div class="remindersWidget m1">
+            <p class="h7 caps">reminders</p>
+            <div class="loaded"></div>
+            <div class="loading"></div>
+        </div> 
     </div>
-    <div class="col col-4 border" id="right-column">
+    <div class="col col-4 custom-scrollbar" id="right-column">
         <div class="calendarWidget m1">
             <p class="h7 caps">calendar</p>
             <div class="loaded"></div>
@@ -44,6 +49,9 @@
 
         var calendarWidgetTemplate = Handlebars.compile($("#calendarWidgetTemplate").html());
         updateWidget("calendar", calendarWidgetTemplate);
+
+        var remindersWidgetTemplate = Handlebars.compile($("#remindersWidgetTemplate").html());
+        updateWidget("reminders", remindersWidgetTemplate);
     });
 
     function updateWidget(widget, template) {
@@ -54,6 +62,7 @@
         $(widgetClassLoaded).hide();
         $(widgetClassLoading).show();
         retrieveData(widget, function(data) {
+            console.log(data);
             $(widgetClassLoaded).html(template(data));
             $(widgetClassLoaded).show();
             $(widgetClassLoading).hide();

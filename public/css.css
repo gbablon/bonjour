@@ -20,7 +20,21 @@ p.caps {
 }
 
 #left-column, #center-column, #right-column {
-  min-height: 600px;
+  height: 600px;
+  overflow-y: auto;
+}
+
+#left-column {
+  border-right: solid 3px #F5F5F5;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+  background-color: #F5F5F5;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: SlateGrey;
 }
 
 .transitWidget {

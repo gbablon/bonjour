@@ -11,7 +11,7 @@ var app = express();
 var credentials = require('./credentials.js');
 
 // set up the port to listen on
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 3000);
 
 // set up our static resource directory
 app.use(express.static(__dirname + '/public'));
@@ -80,6 +80,24 @@ function retrieveCalendarData(cb) {
   calendarService.update(calendarData, cb);
 }
 
+// reminders (Twilio) service
+var remindersData = {
+  lastRefreshed: 0,
+  lastRefreshedString: 0, 
+  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+  data: {}
+};
+
+var remindersService = require('./lib/reminders')({});
+
+function retrieveRemindersData(cb) {
+  if(Date.now() < remindersData.lastRefreshed + remindersData.refreshInterval) {
+    return setImmediate(function() { cb(remindersData); });
+  }
+  remindersData.lastRefreshed = Date.now();
+  remindersService.update(remindersData, cb);
+}
+
 /*
  * Set up templating engine
 */
@@ -121,6 +139,12 @@ app.get('/transit', function(req, res) {
 
 app.get('/calendar', function(req, res) {
   retrieveCalendarData(function(data) {
+    res.json({ data }); 
+  });
+});
+
+app.get('/reminders', function(req, res) {
+  retrieveRemindersData(function(data) {
     res.json({ data }); 
   });
 });
