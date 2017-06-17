@@ -11,7 +11,7 @@ var app = express();
 var credentials = require('./credentials.js');
 
 // set up the port to listen on
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 
 // set up our static resource directory
 app.use(express.static(__dirname + '/public'));
@@ -68,8 +68,8 @@ var calendarData = {
 
 var calendarService = require('./lib/calendar')({
   scopes: ['https://www.googleapis.com/auth/calendar.readonly'], 
-  token_dir: (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/', 
-  token_path: 'calendar-nodejs-quickstart.json'
+  token_dir: '.credentials/', 
+  token_path: 'google_calendar_secret.json'
 });
 
 function retrieveCalendarData(cb) {
