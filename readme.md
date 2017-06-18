@@ -11,3 +11,6 @@ sudo kill -9 [PID]
 
 ##Twilio phone number:
 6463928973
+
+##Other notes
+- Remember to pass --save flag when running npm install, so the package.json file gets updated
