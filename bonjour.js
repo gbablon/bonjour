@@ -23,7 +23,7 @@ app.use(express.static(__dirname + '/public'));
 // weather service
 var weatherData = {
   lastRefreshed: 0,
-  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+  refreshInterval: 1 * 60 * 1000, // Cache for 1m
 };
 
 var weatherService = require('./lib/weather')({
@@ -43,7 +43,7 @@ function retrieveWeatherData(cb) {
 var transitData = {
   lastRefreshed: 0,
   lastRefreshedString: 0, 
-  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+  refreshInterval: 1 * 60 * 1000, // Cache for 1m
 };
 
 var transitService = require('./lib/transit')({
@@ -62,7 +62,7 @@ function retrieveTransitData(cb) {
 var calendarData = {
   lastRefreshed: 0,
   lastRefreshedString: 0, 
-  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+  refreshInterval: 1 * 60 * 1000, // Cache for 1m
   data: {}
 };
 
@@ -84,7 +84,7 @@ function retrieveCalendarData(cb) {
 var remindersData = {
   lastRefreshed: 0,
   lastRefreshedString: 0, 
-  refreshInterval: 15 * 60 * 1000, // Cache for 15m
+  refreshInterval: 1 * 60 * 1000, // Cache for 1m
   data: {}
 };
 

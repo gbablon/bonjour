@@ -20,7 +20,7 @@ p.caps {
 }
 
 #left-column, #center-column, #right-column {
-  height: 600px;
+  height: 650px;
   overflow-y: auto;
 }
 
