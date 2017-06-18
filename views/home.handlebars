@@ -39,20 +39,26 @@
 
 {{#section 'jquery'}}
 <script>
+    var widgets = [];
+    widgets.push({'name': 'weather', 'template': '#weatherWidgetTemplate'});
+    widgets.push({'name': 'transit', 'template': '#transitWidgetTemplate'});
+    widgets.push({'name': 'calendar', 'template': '#calendarWidgetTemplate'});
+    widgets.push({'name': 'reminders', 'template': '#remindersWidgetTemplate'});
+
     $(document).ready(function() {
         $(".loaded").hide();
-        var weatherWidgetTemplate = Handlebars.compile($("#weatherWidgetTemplate").html());
-        updateWidget("weather", weatherWidgetTemplate);
-
-        var transitWidgetTemplate = Handlebars.compile($("#transitWidgetTemplate").html());
-        updateWidget("transit", transitWidgetTemplate);
-
-        var calendarWidgetTemplate = Handlebars.compile($("#calendarWidgetTemplate").html());
-        updateWidget("calendar", calendarWidgetTemplate);
-
-        var remindersWidgetTemplate = Handlebars.compile($("#remindersWidgetTemplate").html());
-        updateWidget("reminders", remindersWidgetTemplate);
+        updateWidgets(widgets);
+        setInterval(updateWidgets, 60 * 5 * 1000);
     });
+
+    function updateWidgets() {
+        var widgetTemplate;
+        for (var i = 0; i < widgets.length; i++) {
+            widgetTemplate = Handlebars.compile($(widgets[i]["template"]).html());
+            updateWidget(widgets[i]["name"], widgetTemplate);
+        }
+    }
+
 
     function updateWidget(widget, template) {
         console.log("updating " + widget);
