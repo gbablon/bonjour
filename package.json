@@ -4,7 +4,6 @@
   "description": "",
   "main": "bonjour.js",
   "dependencies": {
-    "browserify": "^14.4.0",
     "dateformat": "^2.0.0",
     "express": "^4.13.4",
     "express-handlebars": "^2.0.1",
