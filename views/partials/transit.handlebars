@@ -4,22 +4,12 @@
     <img src="/img/icon_ftrain.png" class="icon sm">
   </div>
   <div class="col">
-    <p class="h2 mt0 pb1 inline">\{{statusString}}</p>
+    <p class="h2 mt0 pb1 inline"><a href="#transitDetailsModal" rel="modal:open" class="text-decoration-none" style="color: black;">\{{statusString}}</a></p>
+    <p class="h7 mt0"><a href="#transitDetailsModal" rel="modal:open" class="text-decoration-none" style="color: SlateGrey;">click for details</a></p>
   </div>
 </div>
-<!--<a href="#" id="transitDetailsLink">Details</a>-->
-<!--<p><a href="https://lyft.com/ride?id=lyft&pickup[latitude]=40.678961&pickup[longitude]=-73.993658">Lyft me</a></p>-->
-<div class="display-none" id="transitDetailsModal">
+<div id="transitDetailsModal" style="display: none;">
+  \{{{desc}}}
 </div>
 
-{{#section 'jquery'}}
-  <script>
-    $(document).ready(function() {
-      $("#transitDetailsLink").click(function() {
-        var html = $.parseHTML(decodeURIComponent({{partialsData.transit.data.desc}}));
-        $("#transitDetailsModal").append(html);
-        $("#transitDetailsModal").removeClass("display-none");
-      });
-    });
-  </script>
-{{/section}}
+<!--<p><a href="https://lyft.com/ride?id=lyft&pickup[latitude]=40.678961&pickup[longitude]=-73.993658">Lyft me</a></p>-->

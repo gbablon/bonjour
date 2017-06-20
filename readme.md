@@ -14,3 +14,8 @@ sudo kill -9 [PID]
 
 ##Other notes
 - Remember to pass --save flag when running npm install, so the package.json file gets updated
+
+##Commit instructions (cuz rookie)
+git add .
+git commit -m ""
+git push heroku master
